@@ -7,8 +7,8 @@ color white = #FFFFFF;
 color black = #000000;
 color background = #503197;
 color rside = #5b6ee1;
-color lside = #e26ee1;
-//color Iside = 
+color lside = #f1a8e1;
+color Invside = #f00a0a;
 color cyan = #5fcde4;  //ice
 color yellow = #fbf236; //spikes
 color pink = #d77bba; //trampoline
@@ -25,11 +25,15 @@ color lightBlue = #dfe7fd;
 color midBlue = #a3c4f3;
 
 color lime = #99e550;
+color gmba = #ff9725;
+color Bgreen = #356126;
+color pt = #eb64ff;
+color ptt = #aa1b7d;
 
 
 
 PImage map, ice, stone, treeTrunk1, treeTrunk2, treeLeaf1, treeLeaf2, trampoline, spike; //image file
-PImage bridge, Rside, Lside;
+PImage bridge, Rside, Lside, INVside, ladder, thwomp1, thwomp2;
 int gridSize = 20; //change size of F boxes
 float zoom = 1.5;
 ArrayList<FGameObject> terrain;
@@ -43,15 +47,12 @@ ArrayList<FGameObject> terrain;
 //boolean jumpOn;
 
 PImage[] lava;
-int lCount = 0;
-int l;
-int lx, ly;
-boolean lavaOn;
 
 //CONTROLS
 boolean upkey, downkey, leftkey, rightkey;
 boolean wkey, akey, skey, dkey;
 boolean spacekey;
+boolean thwompOn;
 
 
 //-- Images for character animations
@@ -67,6 +68,7 @@ PImage[] action;
 
 //images for enemies
 PImage[] goomba;
+
 
 
 
@@ -113,16 +115,7 @@ void setup() {
   //jw = 100;
   //jh = 80;
 
-  //array
-  lCount = 4;
-  lava = new PImage[lCount];
-  int l = 0;
-  while (l < lCount) {
-    lava[l] = loadImage("water" + l + ".png");
-    l += 1;
-  }
-  lx = 300;
-  ly = 410;
+
 
   loadWorld(map);
   loadPlayer();
@@ -135,6 +128,8 @@ void loadImages() {
   map = loadImage("platform2.png");
   Rside = loadImage("RIGHTtile.png");
   Lside = loadImage("LEFTtile.png");
+   thwomp1 = loadImage("thwomp0.png");
+  thwomp2 = loadImage("thwomp1.png");
   // sideWall.resize(gridSize, gridSize);
   stone = loadImage("tile_0358.png");
   // stone.resize(gridSize, gridSize);
@@ -149,6 +144,19 @@ void loadImages() {
   treeLeaf2 = loadImage("tile_0018.png");
   spike = loadImage("tile_0183.png");
   bridge = loadImage("tile_0181.png");
+  ladder = loadImage("ladder1.png");
+  ladder.resize(20, 30);
+ 
+
+  lava = new PImage[6];
+  lava[0] = loadImage("lava0.png");
+  lava[1] = loadImage("lava1.png");
+  lava[2] = loadImage("lava2.png");
+  lava[3] = loadImage("lava3.png");
+  lava[4] = loadImage("lava4.png");
+  lava[5] = loadImage("lava5.png");
+
+
 
   //load actions
   idle = new PImage[4];
@@ -183,14 +191,14 @@ void loadImages() {
   //---------------------
 
   //enemies-----------------------------
-  goomba = new PImage[6];
-  goomba[0] = loadImage("left.spider-0 copy.png");
-  goomba[1] = loadImage("left.spider-1 copy.png");
-  goomba[2] = loadImage("left.spider-2 copy.png");
-  goomba[3] = loadImage("left.spider-3 copy.png");
-  goomba[4] = loadImage("left.spider-4 copy.png");
-  goomba[5] = loadImage("left.spider-5 copy.png");
+  goomba = new PImage[2];
+  goomba[0] = loadImage("enemy1.png");
+  goomba[0].resize(60, 60);
+  goomba[1] = loadImage("enemy2.png");
+  goomba[1].resize(60, 60);
 }
+
+
 
 
 
@@ -240,6 +248,12 @@ void loadWorld(PImage img) {
         // stone.resize(35, 35);
         world.add(b);
       }
+      if (c == Invside) {
+        b.attachImage(stone);
+        b.setSensor(true);
+        b.setName("Invside");
+        world.add(b);
+      }
 
 
       if (c == rside) {
@@ -249,15 +263,15 @@ void loadWorld(PImage img) {
         // stone.resize(35, 35);
         world.add(b);
       }
-        if (c == lside) {
+      if (c == lside) {
         b.attachImage(Lside);
         b.setFriction(4.5);
         b.setName("RWall");
         // stone.resize(35, 35);
         world.add(b);
       }
-      
-      
+
+
       if (c == cyan) {
         b.attachImage(ice);
         b.setFriction(0);
@@ -310,26 +324,45 @@ void loadWorld(PImage img) {
         terrain.add(br);
         world.add(br);
       }
+
+      if (c == gmba) {
+        FGoomba gb = new FGoomba(x*gridSize + 120, y* gridSize - 60);
+        terrain.add(gb);
+        world.add(gb);
+      }
+
+      if (c == Bgreen) {
+        b.attachImage(ladder);
+        b.setFriction(5);
+        b.setSensor(true);
+        b.setName("ladder");
+        world.add(b);
+      }
+      if (c == ptt) {
+        FGround gr = new FGround(x*gridSize + 158, y* gridSize );
+        b.setStatic(true);
+        terrain.add(gr);
+        world.add(gr);
+      }
+
+      if (c == pt) {
+        FThwomp th = new FThwomp(x*gridSize + 158, y* gridSize + 130);
+        terrain.add(th);
+        world.add(th);
+      }
+
+
+
       if (c == red) {
-
-        // lCount = 4;
-        // lava = new PImage[lCount];
-        // int l = 0;
-        // while (l < lCount) {
-        //   lava[l] = loadImage("water" + l + ".png");
-        //   l += 1;
-        // }
-        // lx = 300;
-        // ly = 410;
-
-        //// b.attachImage(lava);
-        // b.setSensor(true);
-        // b.setName("treeTrunk2");
-        // world.add(b);
+        FLava lv = new FLava(x*gridSize + 155, y* gridSize + 130);
+        terrain.add(lv);
+        world.add(lv);
       }
     }
   }
 }
+
+
 
 
 
@@ -358,37 +391,6 @@ void drawWorld() {
   scale(zoom);
   world.step();
 
-
-  // if (player.getX() > jx && player.getX() < jx + 20 && player.getY() < jy  && player.getY() > jy - 15) {
-  //if (isTouching1("jump")) {
-  //  image(jump[j], jx, jy, 30, 30); //maybe make in the center of the screen
-  //  println(frameCount);
-  //  if (frameCount % 12 == 0) j += 1;
-  //  if (j == jCount) j = 0;
-  //} else {
-  //  image(jump[0], jx, jy, 30, 30);
-  //}
-
-
-
-
-  if (player.getX() > lx && player.getX() < lx + 20 && player.getY() < ly + 20  && player.getY() > ly) {
-    image(lava[l], lx, ly, 20, 20); //maybe make in the center of the screen
-    println(frameCount);
-    if (frameCount % 12 == 0) l += 1;
-    if (l == lCount) l = 0;
-  } else {
-    image(lava[0], lx, ly, 20, 20);
-  }
-
-
-
-
-  //if (player.getX() > 260 && player.getX() < 330 && player.getY() < 426  && player.getY() > 365d) {
-  //  bridge.setStatic(false);
-  // } else {
-  //  bridge.setStatic(true);
-  // }
 
 
 

@@ -31,7 +31,7 @@ class FPlayer extends FGameObject {
 
   void collisions() {
     if (isTouching("spike")) {
-      setPosition(300, 0);
+     // setPosition(300, 0);
     }
   }
 
@@ -55,7 +55,7 @@ class FPlayer extends FGameObject {
   }
   
     if (wkey && touchingSomething(player)) {
-      player.setVelocity(vx, -300);
+      player.setVelocity(vx, -320);
     }
   
   if (abs(vy) > 0.1)

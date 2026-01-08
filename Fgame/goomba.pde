@@ -14,13 +14,13 @@ class FGoomba extends FGameObject {
   void act() {
     animate();
     collide();
-   // move();
+    move();
   }
 
 
   void animate() {
     if (frame >= goomba.length) frame = 0;
-    if (frameCount % 5 == 0) { //speed
+    if (frameCount % 10 == 0) { //speed
       if (direction == R) attachImage(goomba[frame]);
       if (direction == L) attachImage(reverseImage(goomba[frame]));
         frame++;
@@ -28,10 +28,16 @@ class FGoomba extends FGameObject {
   }
 
   void collide() {
-    if (isTouching("wall")) {
+    if (isTouching("Invside")) {
       direction *= -1;
       setPosition(getX() + direction, getY());
-      //need to create new side wall
     }
   }
+  
+  void move(){
+   float vy = getVelocityY();
+   setVelocity(speed*direction, vy);
+    
+  }
+  
 }
