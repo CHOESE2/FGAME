@@ -17,10 +17,12 @@ class FLava extends FGameObject {
 
 
   void animate() {
-    if (frame >= lava.length) frame = 0;
+    
     if (frameCount % 10 == 0) { //speed
       frame++;
     }
+    if (frame >= lava.length) frame = 0;
+    attachImage(lava[frame]);
   }
 
 //  void collide() {

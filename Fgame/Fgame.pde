@@ -18,6 +18,7 @@ color Dbrown = #663931; //tree
 color Lbrown = #8f563b; //tree
 color red = #ac3232;
 color jump1 = #420b0b;
+color orange = #f44000;
 
 color b = #edf2fb;
 color darkBlue = #abc4ff; //purple hue
@@ -28,12 +29,20 @@ color lime = #99e550;
 color gmba = #ff9725;
 color Bgreen = #356126;
 color pt = #eb64ff;
-color ptt = #aa1b7d;
+
+//boolean gravity
+boolean gOFF = false;
+boolean pOFF = false; // f bodies
+boolean kOFF = false;
+int i;
+int fx, fy, gx, gy;
+
+
 
 
 
 PImage map, ice, stone, treeTrunk1, treeTrunk2, treeLeaf1, treeLeaf2, trampoline, spike; //image file
-PImage bridge, Rside, Lside, INVside, ladder, thwomp1, thwomp2;
+PImage bridge, Rside, Lside, INVside, ladder, thwomp1, thwomp2, savePoint;
 int gridSize = 20; //change size of F boxes
 float zoom = 1.5;
 ArrayList<FGameObject> terrain;
@@ -69,7 +78,7 @@ PImage[] action;
 //images for enemies
 PImage[] goomba;
 
-
+FBox greenBox;
 
 
 boolean touchingSomething(FBox player) {
@@ -102,19 +111,9 @@ void setup() {
   Fisica.init(this);
   terrain = new ArrayList<FGameObject>();
   loadImages();
-  ////array
-  //jCount = 3;
-  //jump = new PImage[jCount];
-  //int j = 0;
-  //while (j < jCount) {
-  //  jump[j] = loadImage("jump" + j + ".png");
-  //  j += 1;
-  //}
-  //jx = 230;
-  //jy = 268;
-  //jw = 100;
-  //jh = 80;
 
+  gx = 40;
+  gy = 0;
 
 
   loadWorld(map);
@@ -128,7 +127,7 @@ void loadImages() {
   map = loadImage("platform2.png");
   Rside = loadImage("RIGHTtile.png");
   Lside = loadImage("LEFTtile.png");
-   thwomp1 = loadImage("thwomp0.png");
+  thwomp1 = loadImage("thwomp0.png");
   thwomp2 = loadImage("thwomp1.png");
   // sideWall.resize(gridSize, gridSize);
   stone = loadImage("tile_0358.png");
@@ -146,7 +145,7 @@ void loadImages() {
   bridge = loadImage("tile_0181.png");
   ladder = loadImage("ladder1.png");
   ladder.resize(20, 30);
- 
+
 
   lava = new PImage[6];
   lava[0] = loadImage("lava0.png");
@@ -338,12 +337,6 @@ void loadWorld(PImage img) {
         b.setName("ladder");
         world.add(b);
       }
-      if (c == ptt) {
-        FGround gr = new FGround(x*gridSize + 158, y* gridSize );
-        b.setStatic(true);
-        terrain.add(gr);
-        world.add(gr);
-      }
 
       if (c == pt) {
         FThwomp th = new FThwomp(x*gridSize + 158, y* gridSize + 130);
@@ -351,7 +344,12 @@ void loadWorld(PImage img) {
         world.add(th);
       }
 
-
+      if (c == orange) {
+        b.attachImage(treeTrunk1);
+        b.setFriction(5);
+        b.setName("savePoint");
+        world.add(b);
+      }
 
       if (c == red) {
         FLava lv = new FLava(x*gridSize + 155, y* gridSize + 130);
@@ -375,10 +373,97 @@ void draw() {
   background(black);
   drawWorld();
   actWorld();
+
+  //gravity / f bodies
+  //fill(255);
+  //tact(80, 20, 50, 10);
+  //rect(80, 20, 50, 10);
+
+  fill(255);
+  tactile(20, 20, 50, 10);
+  rect(20, 20, 50, 10);
+
+  //if (i < 1 && !kOFF) {  //Every 20 frames ...
+  //  makeBox();
+  //  i++;
+  //}
 }
+
+
+
+
+void tactile (int x, int y, int w, int h) {
+  if (mouseX > x && mouseX < x + w && mouseY > y && mouseY < y + h) {
+    strokeWeight(3);
+    stroke(255);
+    gOFF = true;
+  } else {
+    strokeWeight(2);
+    stroke(#34a0a4);
+    gOFF = false;
+  }
+}
+
+
+//void tact(int x, int y, int w, int h) {
+//  if (mouseX > x && mouseX < x + w && mouseY > y && mouseY < y + h) {
+//    strokeWeight(3);
+//    stroke(255);
+//    pOFF = true;
+//  } else {
+//    stroke(0);
+//    pOFF = false;
+//  }
+//}
+
+
+boolean mousePressed = false;
+boolean mp = false;
+
+void mousePressed() {
+  if (gOFF && !mousePressed) {
+    world.setGravity(0, 0);
+    mousePressed = true;
+  } else if (gOFF && mousePressed) {
+    world.setGravity(0, 900);
+    mousePressed = false;
+  }
+
+  //if (pOFF && !mousePressed) {
+  //  kOFF = true;
+  //  i = 0;
+  //  mousePressed = true;
+  //} else if (pOFF && mousePressed) {
+  //  mousePressed = false;
+  //  //i = 0;
+  //  kOFF = false;
+  //}
+}
+
+void makeBox() {
+  greenBox = new FBox(0, 0);
+  greenBox.setPosition(gx, gy);
+
+
+  greenBox.setStroke(255);
+  greenBox.setStrokeWeight(2);
+  greenBox.setFillColor(255);
+
+  //set physical properties
+  greenBox.setDensity(0.2);
+  greenBox.setFriction(3);
+  greenBox.setRestitution(0.25);
+  world.add(greenBox);
+}
+
+
+
+
+
 
 void actWorld() {
   player.act();
+  player.show();
   for (int i = 0; i < terrain.size(); i++) {
     FGameObject t = terrain.get(i);
     t.act();
@@ -389,7 +474,9 @@ void drawWorld() {
   pushMatrix();
   translate(-player.getX()*zoom + width/2, -player.getY()*zoom + height/2);
   scale(zoom);
+
   world.step();
+
 
 
 

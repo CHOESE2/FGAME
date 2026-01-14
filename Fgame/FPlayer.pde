@@ -1,9 +1,8 @@
 class FPlayer extends FGameObject {
     int frame;
     int direction;
+    int healthBar = 100;
   
-    
-    
   FPlayer() {
     super();
     frame = 0;
@@ -12,6 +11,13 @@ class FPlayer extends FGameObject {
     setName("player");
     setRotatable(false);
     setFillColor(white);
+   
+  }
+  
+  void show(){
+     rect(player.getX(), player.getY()-100, 100, 20);
+    
+    
   }
 
   void act() {
