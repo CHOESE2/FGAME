@@ -60,6 +60,7 @@ PImage[] lava;
 //CONTROLS
 boolean upkey, downkey, leftkey, rightkey;
 boolean wkey, akey, skey, dkey;
+boolean mkey;
 boolean spacekey;
 boolean thwompOn;
 
@@ -462,8 +463,8 @@ void makeBox() {
 
 
 void actWorld() {
-  player.act();
-  player.show();
+player.display();
+
   for (int i = 0; i < terrain.size(); i++) {
     FGameObject t = terrain.get(i);
     t.act();
@@ -474,13 +475,17 @@ void drawWorld() {
   pushMatrix();
   translate(-player.getX()*zoom + width/2, -player.getY()*zoom + height/2);
   scale(zoom);
+  
+   for (int i = 0; i < terrain.size(); i++) {
+    FGameObject t = terrain.get(i);
+    t.show();
+  }
+  
+  stroke(255);
+  rect(280, 220, 55, 10);
+  
 
   world.step();
-
-
-
-
-
   world.draw();
   popMatrix();
 }

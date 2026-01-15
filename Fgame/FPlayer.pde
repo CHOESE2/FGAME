@@ -1,8 +1,12 @@
 class FPlayer extends FGameObject {
-    int frame;
-    int direction;
-    int healthBar = 100;
+  int frame;
+  int direction;
+  int w = 100;
+  boolean save1 = false;
+  boolean Pdead = false;
+  boolean Gdead = false;
   
+ 
   FPlayer() {
     super();
     frame = 0;
@@ -11,13 +15,38 @@ class FPlayer extends FGameObject {
     setName("player");
     setRotatable(false);
     setFillColor(white);
-   
   }
+
+  void show() {
+    
+  }
+
+  void display() {
+    show();
+    act();
   
-  void show(){
-     rect(player.getX(), player.getY()-100, 100, 20);
-    
-    
+     //health
+    stroke(0);
+    strokeWeight(2);
+    fill(255);
+    rect(vx + 302, vy + 190, 90, 10);
+    fill(0, 255, 0);
+    rect(vx + 302, vy + 190, w, 10);
+
+    if (w < 60) {
+      fill(255, 172, 70);
+      rect(vx + 302, vy + 190, w, 10);
+    }
+    if (w < 30) {
+      fill(255, 0, 0);
+      rect(vx + 302, vy + 190, w, 10);
+
+      if (w <= 0) {
+        // mode = DEFEAT;
+        w = 0;
+        Pdead = true;
+      }
+    }
   }
 
   void act() {
@@ -28,7 +57,7 @@ class FPlayer extends FGameObject {
 
   void animate() {
     if (frame >= action.length) frame = 0;
-    if (frameCount % 7 == 0){
+    if (frameCount % 7 == 0) {
       if (direction == R) attachImage(action[frame]);
       if (direction == L) attachImage(reverseImage(action[frame]));
       frame++;
@@ -37,17 +66,35 @@ class FPlayer extends FGameObject {
 
   void collisions() {
     if (isTouching("spike")) {
-     // setPosition(300, 0);
+       setPosition(300, 0);
     }
+
+    if (isTouching("savePoint")) {
+      save1 = true;
+    }
+
+    if (save1 && Pdead) {
+       w = 100;
+      setPosition(300, 0);
+      Pdead = false;
+     
+    }
+    
+    if(isTouching("goomba") && !Gdead){
+      w -= 5;
+    }
+    
+    
   }
 
   void handleInput() {
+
     float vx =  getVelocityX();
     float vy =  getVelocityY();
-    if (abs(vy) < 0.1){
+
+    if (abs(vy) < 0.1) {
       action = idle;
     }
-    
     
     if (akey) {
       setVelocity(-150, vy);
@@ -58,16 +105,18 @@ class FPlayer extends FGameObject {
       setVelocity(150, vy);
       action = run;
       direction = R;
-  }
-  
+    }
+
+    if (abs(vy) > 0.1) {
+      action = jump;
+    }
+
     if (wkey && touchingSomething(player)) {
       player.setVelocity(vx, -320);
     }
-  
-  if (abs(vy) > 0.1)
-  action = jump;
+    
+    if(mkey){
+      action = attack;
+    }
   }
-  
-  
-  
-}
+  }

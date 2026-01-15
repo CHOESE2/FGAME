@@ -14,12 +14,7 @@ class Fsavepoint extends FGameObject {
 
   void act() {
 
-    //if (check1 && touchingSomething(player)){
-    //if player health is zero, set position to previous checkpoint
-    //}
-
-
-
+ 
 
 }
 

@@ -9,6 +9,10 @@ class FLava extends FGameObject {
     setName("lava");
     setRotatable(false);
   }
+  
+  void show(){
+    
+  }
 
   void act() {
     animate();

@@ -11,6 +11,10 @@ class FGoomba extends FGameObject {
     setRotatable(false);
   }
 
+void show(){
+  
+}
+
   void act() {
     animate();
     collide();
@@ -31,6 +35,10 @@ class FGoomba extends FGameObject {
     if (isTouching("Invside")) {
       direction *= -1;
       setPosition(getX() + direction, getY());
+    }
+    
+    if(isTouching("player")){
+      
     }
   }
   

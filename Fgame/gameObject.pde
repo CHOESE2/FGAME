@@ -1,11 +1,16 @@
 class FGameObject extends FBox {
   final int L = -1;
   final int R = 1;
-  
+  float vx =  getVelocityX();
+  float vy =  getVelocityY();
+
   boolean thwompOn;
 
   FGameObject() {
     super(gridSize/1.5, gridSize/1.5);
+  }
+
+  void show() {
   }
 
 

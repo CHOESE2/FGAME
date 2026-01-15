@@ -8,6 +8,7 @@ void keyPressed() {
   if (key == 'D' || key == 'd') dkey = true;
   if (key == 'W' || key == 'w') wkey = true;
   if (key == 'S' || key == 's') skey = true;
+  if (key == 'M' || key == 'm') mkey = true;
   if (key == ' ') spacekey = true;
 }
 
@@ -22,5 +23,6 @@ void keyReleased() {
   if (key == 'D' || key == 'd') dkey = false;
   if (key == 'W' || key == 'w') wkey = false;
   if (key == 'S' || key == 's') skey = false;
+  if (key == 'M' || key == 'm') mkey = false;
   if (key == ' ') spacekey = false;
 }

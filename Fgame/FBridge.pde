@@ -8,8 +8,10 @@ class FBridge extends FGameObject {
     setStatic(true);
     setFriction(4);
   }
-
-
+  
+  void show(){ 
+  }
+  
   void act() {
     if (isTouching("player")) {
       setStatic(false);
