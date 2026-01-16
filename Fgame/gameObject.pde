@@ -1,8 +1,11 @@
 class FGameObject extends FBox {
   final int L = -1;
   final int R = 1;
+  int direction;
   float vx =  getVelocityX();
   float vy =  getVelocityY();
+  
+ PVector loc;
 
   boolean thwompOn;
 

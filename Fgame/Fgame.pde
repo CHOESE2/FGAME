@@ -19,6 +19,7 @@ color Lbrown = #8f563b; //tree
 color red = #ac3232;
 color jump1 = #420b0b;
 color orange = #f44000;
+color ghosty = #1afff5;
 
 color b = #edf2fb;
 color darkBlue = #abc4ff; //purple hue
@@ -78,6 +79,7 @@ PImage[] action;
 
 //images for enemies
 PImage[] goomba;
+PImage[] ghost;
 
 FBox greenBox;
 
@@ -196,6 +198,13 @@ void loadImages() {
   goomba[0].resize(60, 60);
   goomba[1] = loadImage("enemy2.png");
   goomba[1].resize(60, 60);
+  
+  //ghost
+  ghost = new PImage[2];
+  ghost[0] = loadImage("ghost1.png");
+  ghost[0].resize(60, 60);
+  ghost[1] = loadImage("ghost1.png");
+  ghost[1].resize(60, 60);
 }
 
 
@@ -339,11 +348,11 @@ void loadWorld(PImage img) {
         world.add(b);
       }
 
-      if (c == pt) {
-        FThwomp th = new FThwomp(x*gridSize + 158, y* gridSize + 130);
-        terrain.add(th);
-        world.add(th);
-      }
+      //if (c == pt) {
+      //  FThwomp th = new FThwomp(x*gridSize + 158, y* gridSize + 130);
+      //  terrain.add(th);
+      //  world.add(th);
+      //}
 
       if (c == orange) {
         b.attachImage(treeTrunk1);
@@ -356,6 +365,11 @@ void loadWorld(PImage img) {
         FLava lv = new FLava(x*gridSize + 155, y* gridSize + 130);
         terrain.add(lv);
         world.add(lv);
+      }
+      if(c == ghosty){
+        FGhost gh = new FGhost(x*gridSize + 250, y* gridSize - 150);
+        terrain.add(gh);
+        world.add(gh);
       }
     }
   }
@@ -482,7 +496,10 @@ void drawWorld() {
   }
   
   stroke(255);
+  fill(255);
   rect(280, 220, 55, 10);
+  
+  //rect(655, 200, 85, 100); // thwomp hit box
   
 
   world.step();

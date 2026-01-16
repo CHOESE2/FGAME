@@ -3,6 +3,9 @@ class FGoomba extends FGameObject {
   int direction = L;
   int speed = 50;
   int frame = 0;
+  
+  int g = 15;
+  boolean Gdead;
 
   FGoomba(float x, float y) {
     super();
@@ -12,7 +15,28 @@ class FGoomba extends FGameObject {
   }
 
 void show(){
-  
+    //health
+    stroke(0);
+    strokeWeight(2);
+    fill(255);
+    rect(vx + 602, vy + 600, 90, 10);
+    fill(0, 255, 0);
+     rect(vx + 602, vy + 600, g, 10);
+
+    if (g < 60) {
+      fill(255, 172, 70);
+      rect(vx + 602, vy + 600, g, 10);
+    }
+    if (g < 30) {
+      fill(255, 0, 0);
+       rect(vx + 602, vy + 600, g, 10);
+
+      if (g <= 0) {
+        // mode = DEFEAT;
+        g = 0;
+        Gdead = true;
+      }
+    }
 }
 
   void act() {
@@ -37,15 +61,22 @@ void show(){
       setPosition(getX() + direction, getY());
     }
     
-    if(isTouching("player")){
-      
+    if(isTouching("player") && mkey){
+      g -= 5;
     }
+    
+   
   }
   
   void move(){
    float vy = getVelocityY();
    setVelocity(speed*direction, vy);
-    
+    if (Gdead){
+         setVelocity(0, vy);
+         fill(255);
+      rect(600, 600, 100, 100);
+      
+    }
   }
   
 }

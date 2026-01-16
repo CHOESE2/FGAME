@@ -5,6 +5,7 @@ class FPlayer extends FGameObject {
   boolean save1 = false;
   boolean Pdead = false;
   boolean Gdead = false;
+ //int px, py;
   
  
   FPlayer() {
@@ -15,6 +16,8 @@ class FPlayer extends FGameObject {
     setName("player");
     setRotatable(false);
     setFillColor(white);
+    
+   // loc = new PVector(px, py);
   }
 
   void show() {
@@ -66,7 +69,8 @@ class FPlayer extends FGameObject {
 
   void collisions() {
     if (isTouching("spike")) {
-       setPosition(300, 0);
+      // setPosition(300, 0);
+       w -= 1;
     }
 
     if (isTouching("savePoint")) {
@@ -81,7 +85,15 @@ class FPlayer extends FGameObject {
     }
     
     if(isTouching("goomba") && !Gdead){
-      w -= 5;
+      w -= 2;
+    }
+    
+    if (isTouching("thwomp")){
+      w -= 1; 
+    }
+    
+    if(isTouching("lava")){
+      w -= 1;
     }
     
     
@@ -96,16 +108,16 @@ class FPlayer extends FGameObject {
       action = idle;
     }
     
-    if (akey) {
-      setVelocity(-150, vy);
-      action = run;
-      direction = L;
-    }
-    if (dkey) {
-      setVelocity(150, vy);
-      action = run;
-      direction = R;
-    }
+      if (akey) {
+        setVelocity(-150, vy);
+        action = run;
+        direction = L;
+      }
+      if (dkey) {
+        setVelocity(150, vy);
+        action = run;
+        direction = R;
+      }
 
     if (abs(vy) > 0.1) {
       action = jump;

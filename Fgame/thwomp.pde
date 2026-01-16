@@ -19,44 +19,55 @@ class FThwomp extends FGameObject {
 
 
   void act() {
+    
+    collide();
 
     float vx =  getVelocityX();
     float vy =  getVelocityY();
     //fill(255);
-    //rect(300, 150, 85, 100);
+   
 
 
-    if (player.getX() > 655 && player.getX() < 740 ){ //&& Tm2! && Tm3!) { //&& player.getY() > 150 && player.getY() < 50){
+    if (player.getX() > 655 && player.getX() < 740 && player.getY() > 200 && player.getY() < 300 && !TON){
       Tm1 = 1;
     } else {
       Tm1 = 0;
     }
+   
 
   if (Tm1 == 0) {
       attachImage(thwomp1);
       setStatic(true);
-   
+      
     }
 
-
-
-    if (Tm1 == 1) {
+    if (Tm1 == 1 && !TON) {
       attachImage(thwomp2);
       setStatic(false);
-     if (vy <= 0) {
+     if (abs(vy) < 0.1) {
         Tm1 = 3;
+    
 
       }
     }
 
-   else if (Tm1 == 3) {
-    //  TON = true;
+     else if (abs(vy) < 0.1 && Tm1 == 3) {
+      TON = true;
       attachImage(thwomp2);
-      vy -= 5;
+     
+    }
+    
+    if (TON){
+       vy -= 5;
       
-       
-
-  
     }
   }
+  
+  void collide(){
+   
+      
+      
+  }
+    
+ 
 }
