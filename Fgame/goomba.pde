@@ -65,15 +65,23 @@ void show(){
       g -= 5;
     }
     
+    //if(isTouching("savePoint") && Gdead){
+      
+    //}
+    
+    
+    
    
   }
   
   void move(){
    float vy = getVelocityY();
    setVelocity(speed*direction, vy);
+   
     if (Gdead){
-         setVelocity(0, vy);
-         fill(255);
+      background(255, 0, 0);
+     // setVelocity( player.getVelocityX(), player.getvelocityY() );
+      fill(255);
       rect(600, 600, 100, 100);
       
     }

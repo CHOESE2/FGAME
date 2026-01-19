@@ -3,6 +3,18 @@ FWorld world;
 
 FPlayer player;
 
+
+
+//MODE FRAMEWORK
+int MODE;
+final int INTRO = 0;
+final int GAME = 1;
+final int RESET = 2;
+
+
+PFont dog;
+
+
 color white = #FFFFFF;
 color black = #000000;
 color background = #503197;
@@ -43,7 +55,7 @@ int fx, fy, gx, gy;
 
 
 PImage map, ice, stone, treeTrunk1, treeTrunk2, treeLeaf1, treeLeaf2, trampoline, spike; //image file
-PImage bridge, Rside, Lside, INVside, ladder, thwomp1, thwomp2, savePoint;
+PImage bridge, Rside, Lside, INVside, ladder, thwomp1, thwomp2, savePoint, emerald;
 int gridSize = 20; //change size of F boxes
 float zoom = 1.5;
 ArrayList<FGameObject> terrain;
@@ -148,6 +160,7 @@ void loadImages() {
   bridge = loadImage("tile_0181.png");
   ladder = loadImage("ladder1.png");
   ladder.resize(20, 30);
+  emerald = loadImage("emerald.png");
 
 
   lava = new PImage[6];
@@ -367,7 +380,7 @@ void loadWorld(PImage img) {
         world.add(lv);
       }
       if(c == ghosty){
-        FGhost gh = new FGhost(x*gridSize + 250, y* gridSize - 150);
+        FGhost gh = new FGhost(x*gridSize + 30, y* gridSize -300);
         terrain.add(gh);
         world.add(gh);
       }
@@ -385,23 +398,13 @@ void loadPlayer() {
 }
 
 void draw() {
-  background(black);
-  drawWorld();
-  actWorld();
-
-  //gravity / f bodies
-  //fill(255);
-  //tact(80, 20, 50, 10);
-  //rect(80, 20, 50, 10);
-
-  fill(255);
-  tactile(20, 20, 50, 10);
-  rect(20, 20, 50, 10);
-
-  //if (i < 1 && !kOFF) {  //Every 20 frames ...
-  //  makeBox();
-  //  i++;
-  //}
+   if ( MODE == INTRO) {
+    intro();
+  } else if (MODE == GAME) {
+    game();
+  } else if (MODE == RESET) {
+    reset();
+  }
 }
 
 
@@ -444,15 +447,13 @@ void mousePressed() {
     mousePressed = false;
   }
 
-  //if (pOFF && !mousePressed) {
-  //  kOFF = true;
-  //  i = 0;
-  //  mousePressed = true;
-  //} else if (pOFF && mousePressed) {
-  //  mousePressed = false;
-  //  //i = 0;
-  //  kOFF = false;
-  //}
+  if (MODE == INTRO && !gOFF) {
+    introClicks();
+  } else if (MODE == GAME && !gOFF){
+    gameClicks();
+  } else if (MODE == RESET && !gOFF){
+    resetClicks();
+  }
 }
 
 void makeBox() {
@@ -469,40 +470,4 @@ void makeBox() {
   greenBox.setFriction(3);
   greenBox.setRestitution(0.25);
   world.add(greenBox);
-}
-
-
-
-
-
-
-void actWorld() {
-player.display();
-
-  for (int i = 0; i < terrain.size(); i++) {
-    FGameObject t = terrain.get(i);
-    t.act();
-  }
-}
-
-void drawWorld() {
-  pushMatrix();
-  translate(-player.getX()*zoom + width/2, -player.getY()*zoom + height/2);
-  scale(zoom);
-  
-   for (int i = 0; i < terrain.size(); i++) {
-    FGameObject t = terrain.get(i);
-    t.show();
-  }
-  
-  stroke(255);
-  fill(255);
-  rect(280, 220, 55, 10);
-  
-  //rect(655, 200, 85, 100); // thwomp hit box
-  
-
-  world.step();
-  world.draw();
-  popMatrix();
 }

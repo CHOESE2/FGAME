@@ -1,7 +1,7 @@
 class FGhost extends FGameObject {
 
   int direction = L;
-  int speed = 50;
+  int speed = 40;
   int frame = 0;
   
   int gh = 15;
@@ -69,65 +69,60 @@ void show(){
     //  g -= 5;
     //}
     
+    
+   
    
   }
   
   void move(){
-   float vy = getVelocityY();
-   float vx = getVelocityX();
-   setVelocity(speed*direction, vy);
+   float vy = player.getVelocityY();
+   float vx = player.getVelocityX();
+   setVelocity(vx, vy);
    
    
    
    //left
-   if(direction == L && akey){  //same direction
-     LdirectOn = true;
-   }
-   if(direction == R && dkey){  //same direction
-     RdirectOn = true;
-   }
+   
+   
+   //if(akey){  //same direction
+   //  LdirectOn = true;
+   //  RdirectOn = false;
+   //}
+   //else if (dkey){  //same direction
+   //  RdirectOn = true;
+   //  LdirectOn = false;
+   //}
+  
+   //if (direction * player.getVelocityX() < 0){ //opposite direction 
+   //  directOn = false;
+   //}
    
    
    
-   if (direction == L && dkey || player.getVelocityX() == 0){ //opposite direction 
-     directOn = false;
-   }
-   if (direction == R && akey || player.getVelocityX() == 0){ //opposite direction 
-     directOn = false;
-   }
+   //make this ghost follow player. 
+  
    //------------------------------
   
-      if (LdirectOn ) {
-        setVelocity(-100, vy);
-      }
+  //    if (LdirectOn ) {
+  //      setVelocity(-100, vy);
+  //    }
       
-       if (RdirectOn ) {
-        setVelocity(100, vy);
-      }
-      
-      
-       else if (!directOn) {
-        setVelocity(0, vy);
-      }
+  //    else if (RdirectOn ) {
+  //      setVelocity( 100, vy);
+  //    }
       
       
-
+  //     else if (!directOn) {
+  //      setVelocity(0, vy);
+  //    }
       
-      
-      
-      
-      
-      //if (dkey) {
-      //  setVelocity(150, vy);
-      //  direction = R;
-      //}
    
-    if (Ghdead){
-         setVelocity(0, vy);
-         fill(255);
-      rect(600, 600, 100, 100);
+    //if (Ghdead){
+    //     setVelocity(0, vy);
+    //     fill(255);
+    //  rect(600, 600, 100, 100);
       
-    }
+    //}
   }
   
 }

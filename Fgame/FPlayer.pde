@@ -3,8 +3,10 @@ class FPlayer extends FGameObject {
   int direction;
   int w = 100;
   boolean save1 = false;
+  boolean save2 = false;
   boolean Pdead = false;
   boolean Gdead = false;
+  boolean hurting1 = false;
  //int px, py;
   
  
@@ -72,21 +74,46 @@ class FPlayer extends FGameObject {
       // setPosition(300, 0);
        w -= 1;
     }
+    
 
-    if (isTouching("savePoint")) {
+
+    if (isTouching("savePoint") && player.getX() >280 && player.getX() < 345 && player.getY() > 210 && player.getY() < 270) {
       save1 = true;
+      save2 = false;
     }
-
+    
     if (save1 && Pdead) {
        w = 100;
       setPosition(300, 0);
       Pdead = false;
-     
     }
+    //-------------------------------------
+    if (isTouching("savePoint") && player.getX() > 370 && player.getX() < 465 && player.getY() > 850 && player.getY()< 880){
+      save2 = true;
+      save1 = false;
+    }
+    if (save2 && Pdead){ ///and gdead
+      w = 100;
+      setPosition(500, 800);
+      Pdead = false;
+    }
+    
+    //if (goomba.getVelocityX() <= 0){
+    //  Gdead = true;
+    //}
+    
+    if (Gdead){
+      background(255, 0, 0);
+    }
+    
+    
     
     if(isTouching("goomba") && !Gdead){
       w -= 2;
     }
+    
+   
+
     
     if (isTouching("thwomp")){
       w -= 1; 
