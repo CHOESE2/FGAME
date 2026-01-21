@@ -5,6 +5,9 @@ class FHammerBro extends FGameObject {
   int frame = 0;
   boolean hammerCreate;
 
+
+
+
   int hb = 15;
   boolean  Hbdead;
 
@@ -17,28 +20,7 @@ class FHammerBro extends FGameObject {
   }
 
   void show() {
-    //health
-    stroke(0);
-    strokeWeight(2);
-    fill(255);
-    rect(vx + 602, vy + 600, 90, 10);
-    fill(0, 255, 0);
-    rect(vx + 602, vy + 600, hb, 10);
-
-    if (hb < 60) {
-      fill(255, 172, 70);
-      rect(vx + 602, vy + 600, hb, 10);
-    }
-    if (hb < 30) {
-      fill(255, 0, 0);
-      rect(vx + 602, vy + 600, hb, 10);
-
-      if (hb <= 0) {
-        // mode = DEFEAT;
-        hb = 0;
-        Hbdead = true;
-      }
-    }
+ 
   }
 
   void display() {
@@ -70,11 +52,8 @@ class FHammerBro extends FGameObject {
 
     if (isTouching("player") && mkey) {
       hb -= 5;
+   
     }
-
-    //if(isTouching("savePoint") && Gdead){
-
-    //}
   }
 
   void move() {
@@ -88,31 +67,34 @@ class FHammerBro extends FGameObject {
       rect(600, 600, 100, 100);
     }
 
-    if (random(0, 1000) < 5) {
+    if (random(0, 100) < 5) {
       makeBoxx();
     }
   }
 
 
   void makeBoxx() {
+    float randomX = random(-300, 300);
+    float randomY = random(-500, 0);
 
-   
-      hammerbro = new FBox(getVelocityX(), getVelocityY());
-      hammerbro.setPosition(300, 0);
+    hammerbro = new FBox(10, 10);
+    hammerbro.setPosition(getX(), getY());
 
-      //set visuals
+    //set visuals
 
-      hammerbro.attachImage(hammer);
-      hammerbro.setStroke(0);
-      hammerbro.setStrokeWeight(2);
-      hammerbro.setFillColor(255);
+    hammerbro.attachImage(hammer);
+    hammerbro.setStroke(0);
+    hammerbro.setStrokeWeight(2);
+    hammerbro.setFillColor(255);
 
-      //set physical properties
-      hammerbro.setDensity(0.2);
-       hammerbro.setVelocity(getX(), -200);
-       hammerbro.setSensor(true);
-      hammerbro.setFriction(3);
-      hammerbro.setRestitution(0.25);
-      world.add(hammerbro);
-    }
+    //set physical properties
+    hammerbro.setDensity(0.2);
+    hammerbro.setName("hammer");
+    hammerbro.setVelocity(randomX, randomY);
+    hammerbro.setSensor(true);
+    hammerbro.setFriction(3);
+    hammerbro.setAngularVelocity(4);
+    hammerbro.setRestitution(0.25);
+    world.add(hammerbro);
   }
+}

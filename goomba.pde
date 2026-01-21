@@ -70,11 +70,14 @@ void display(){
       g -= 5;
     }
     
-    //if(isTouching("savePoint") && Gdead){
-      
-    //}
-    
-    
+    if (isTouching("player")){
+    if (player.getY() <= getY() && player.getVelocityY() > 0){
+      Gdead = true;
+      g -= 10;
+     // player.setVelocity(player.getVelocityX(), -15);
+    }
+    }
+   
     
    
   }
@@ -84,10 +87,10 @@ void display(){
    setVelocity(speed*direction, vy);
    
     if (Gdead){
-      background(255, 0, 0);
-     // setVelocity( player.getVelocityX(), player.getvelocityY() );
-      fill(255);
-      rect(600, 600, 100, 100);
+      setVelocity(0, 0);
+      g = 0;
+      //fill(255);
+      //rect(600, 600, 100, 100);
       
     }
   }

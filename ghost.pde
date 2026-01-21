@@ -65,7 +65,7 @@ class FGhost extends FGameObject {
 
   void collide() {
 
-    if(isTouching("player") && mkey){
+    if (isTouching("player") && mkey) {
       gh -= 5;
     }
   }
@@ -74,25 +74,43 @@ class FGhost extends FGameObject {
     boolean facingPlayer = (player.direction == R && getX() > player.getX() || player.direction == L && getX() < player.getX() );
     float vy = player.getVelocityY();
     float vx = player.getVelocityX();
-    
-  
 
-   
-      if (facingPlayer) {
-        setVelocity(0, 0);
-        stateMove = false;
-      } else {
-        stateMove = true;
-        setVelocity(dx, dy);
-        dx = player.getX() - getX();
-        dy = player.getY() - getY();
 
-        if (dist(player.getX(), player.getY(), getX(), getY()) < 5) {
-          setVelocity(dx*0.10, dy);
-        }
+
+
+    if (facingPlayer) {
+      setVelocity(0, 0);
+      stateMove = false;
+    } else {
+      stateMove = true;
+      setVelocity(dx, dy);
+      dx = player.getX() - getX();
+      dy = player.getY() - getY();
+
+      if (dist(player.getX(), player.getY(), getX(), getY()) < 100) {
+        setVelocity(dx*0.10, dy);
+        setSensor(true);
       }
     }
-  
+
+
+    if (isTouching("player")) {
+      if (player.getY() <= getY() && player.getVelocityY() > 0) {
+        Ghdead = true;
+        gh -= 10;
+        // player.setVelocity(player.getVelocityX(), -15);
+      }
+    }
+    
+    if (Ghdead){
+      setVelocity(0, 200);
+      setSensor(true);
+      setStatic(false);
+      
+      
+    }
+  }
+
 
   //---------------------------------
 }

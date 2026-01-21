@@ -1,25 +1,46 @@
 import fisica.*;
+import processing.sound.*;
 FWorld world;
 
 FPlayer player;
 FBox hammerbro;
+PImage[] IntroScreen;
+int IntroC;
+
+
+//SOUND
+SoundFile BgMusic;
+SoundFile Collect;
+SoundFile Intro;
+SoundFile Winner;
 
 
 
+
+
+//npc
+int DNPC;
+boolean npcGONE = false;
+boolean keyOn = false;
+boolean keyTaken = false;
+int nx = 720;
+boolean emeraldOn = false;
 
 
 //MODE FRAMEWORK
 int MODE;
 final int INTRO = 0;
 final int GAME = 1;
-final int RESET = 2;
+final int GAMEOVER = 3;
+final int PAUSE = 4;
+
 
 
 PFont dogo;
 PFont chees;
 
 
-
+color Dino = #34a0a4;
 color white = #FFFFFF;
 color black = #000000;
 color background = #503197;
@@ -37,6 +58,7 @@ color red = #ac3232;
 color jump1 = #420b0b;
 color orange = #f44000;
 color ghosty = #1afff5;
+color cdoor = #ff955c;
 
 color b = #edf2fb;
 color darkBlue = #abc4ff; //purple hue
@@ -60,8 +82,8 @@ int fx, fy, gx, gy;
 
 
 
-PImage map, ice, stone, treeTrunk, treeLeaf, trampoline, spike; //image file
-PImage bridge, Rside, Lside, INVside, ladder, thwomp1, thwomp2, savePoint, emerald, hammer;
+PImage map, ice, stone, treeTrunk, treeLeaf, trampoline, spike, door; //image file
+PImage bridge, Rside, Lside, INVside, ladder, thwomp1, thwomp2, savePoint, emerald, hammer, npc1, keyy, enemy2, enemy1, coin;
 int gridSize = 20; //change size of F boxes
 float zoom = 1.5;
 ArrayList<FGameObject> terrain;
@@ -75,6 +97,7 @@ ArrayList<FGameObject> terrain;
 //boolean jumpOn;
 
 PImage[] lava;
+
 
 //CONTROLS
 boolean upkey, downkey, leftkey, rightkey;
@@ -140,10 +163,25 @@ void setup() {
   Fisica.init(this);
   terrain = new ArrayList<FGameObject>();
   loadImages();
+  
+  //GIF
+ // IntroCount =
+  
+  
+  
+  
+BgMusic = new SoundFile(this, "background.mp3");
+Collect = new SoundFile(this, "collect.wav");
+//Intro = new soundFile(this, "");
+//Winner = new SoundFile(this, "");
+
+
+  //Sound.amps(0.7);
+
  
    //TEXT
-  //dogo = createFont("dogicapixelbold copy 3.otf", 80);
- // chees = createFont("dogicapixel copy 3.otf", 40);
+  dogo = createFont("dogicapixelbold copy.otf", 80);
+  chees = createFont("dogicapixel copy.otf", 40);
   
 
   gx = 40;
@@ -197,7 +235,14 @@ void loadImages() {
   savePoint = loadImage("tile_0021.png");
   hammer = loadImage("hammer.png");
   hammer.resize(30, 30);
-
+  npc1 = loadImage("npc1.png");
+  npc1.resize(40, 40);
+  keyy = loadImage("key.png");
+  door = loadImage("door.png");
+  door.resize(40, 40);
+  enemy2 = loadImage("enemy2.png");
+  enemy1 = loadImage("ghost1.png");
+  coin = loadImage("coin.png");
 
 
 
@@ -262,6 +307,9 @@ void loadImages() {
   ghost[0].resize(60, 60);
   ghost[1] = loadImage("ghost1.png");
   ghost[1].resize(60, 60);
+  
+  
+ 
 }
 
 
@@ -384,7 +432,7 @@ void loadWorld(PImage img) {
       }
 
       if (c == gmba) {
-        FGoomba gb = new FGoomba(x*gridSize + 120, y* gridSize - 60);
+        FGoomba gb = new FGoomba(x*gridSize + 120, y* gridSize + 60);
         terrain.add(gb);
         world.add(gb);
       }
@@ -422,10 +470,18 @@ void loadWorld(PImage img) {
       }
       
       if (c == hb) {
-        FHammerBro hb  = new FHammerBro(x*gridSize + 30, y* gridSize -300);
+        FHammerBro hb  = new FHammerBro(x*gridSize + 80, y* gridSize + 130);
         terrain.add(hb);
         world.add(hb);
       }
+      
+        if (c == cdoor) {
+        b.attachImage(door);
+        b.setName("door");
+        b.setSensor(true);
+        world.add(b);
+      }
+
       
       
     }
@@ -446,9 +502,12 @@ void draw() {
     intro();
   } else if (MODE == GAME) {
     game();
-  } else if (MODE == RESET) {
-    reset();
+  } else if (MODE == GAMEOVER) {
+    gameover();
+  } else if (MODE == PAUSE){
+    pause();
   }
+  
 }
 
 
@@ -495,8 +554,10 @@ void mousePressed() {
     introClicks();
   } else if (MODE == GAME && !gOFF) {
     gameClicks();
-  } else if (MODE == RESET && !gOFF) {
-    resetClicks();
+  } else if (MODE == GAMEOVER && !gOFF) {
+    gameoverClicks();
+  } else if (MODE == PAUSE && !gOFF){
+    pauseClicks();
   }
 }
 
